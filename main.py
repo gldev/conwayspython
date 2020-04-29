@@ -46,9 +46,9 @@ while True:
             pos = pygame.mouse.get_pos()
             mx, my = int(pos[0] / gsx), int(pos[1] / gsy)
             if state[mx, my] == 1:
-                state[mx, my] = 0
+                statecpy[mx, my] = 0
             else:
-                state[mx, my] = 1
+                statecpy[mx, my] = 1
 
     for y in range(0, gcy):
         for x in range(0, gcx):

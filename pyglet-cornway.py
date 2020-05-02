@@ -13,9 +13,16 @@ bat = pyglet.graphics.Batch()
 white = [255]*4
 black = [0]*4
 
+global state, mem_cache, statecpy
+
 mem_cache = {}
 
 state = numpy.zeros(( cell_width, cell_height ))
+state[2, 3] = 1
+state[2, 4] = 1
+state[2, 5] = 1
+state[1, 4] = 1
+possx,possy= 0,0
 
 def neigh(posx, posy, grid, sizex, sizey):
     return (
@@ -30,12 +37,21 @@ def neigh(posx, posy, grid, sizex, sizey):
     )
 
 @window.event
+def on_mouse_press(x, y, button, modifiers):
+    mx, my = int(x / pixel_width), int(y / pixel_height)
+    possx, possy = (mx, my)
+    if state[mx, my] == 1:
+        state[mx, my] = 0
+    else:
+        state[mx, my] = 1
+
+@window.event
 def on_draw():
     window.clear()
     batch.draw()
 
 def update(dt):
-    global state
+    global state, statecpy
     statecpy = numpy.copy(state)
     for y in range(0, cell_height):
         for x in range(0, cell_width):
@@ -67,9 +83,5 @@ def update(dt):
     state = numpy.copy(statecpy)
 
 if __name__ == "__main__":
-    state[2, 3] = 1
-    state[2, 4] = 1
-    state[2, 5] = 1
-    state[1, 4] = 1
     pyglet.clock.schedule_interval(update, 1 / 5.0)
     pyglet.app.run()
